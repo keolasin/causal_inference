@@ -1,0 +1,5 @@
+# Ignore PDFs and word docs
+
+**/**.pdf
+**/**.doc
+**/**.docx
