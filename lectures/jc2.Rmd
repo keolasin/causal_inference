@@ -1,0 +1,73 @@
+---
+title: "Journal Club Assignment 2"
+author: "Matthew Reyes"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Step 3: Observed Data and their link to the causal model
+
+1. Specify the observed data.
+
+*Answer*: From the study, our observed data would be described as a random variable O, a subset of the endogenous variables $X$, with distribution $P_O$, so $O = (W, A, Z, Y) \sim P_O$.
+
+2. What notation do we use to refer to the distribution of the observed data?
+
+*Answer*: As above, we use $O = (W, A, Z, Y) \sim P_O$ to describe the distribution.
+
+3. What is the link between the causal model and the observed data?
+
+*Answer*: We're assuming that the observed data O are generated, through sampling **n** times from a data-generating system described by our structural causal model
+
+4. What is the statistical model M?
+
+*Answer*: This would be the set of all possible distributions for the observed data, so the true distribution is an element of the statistical model such that $P_O \in M$
+
+5. Does the causal model M* place any restrictions on statistical model M?
+
+*Answer*: No - the SCM M* places no restrictions on the set of allowed data for the statistical model, since we haven't made any restrictions on the SCM distribution $P_X$, so we have a non-parametric statistical model.
+
+# Step 4: Assess Identifiability
+
+6. The target causal parameter Ψ∗(P∗) is not identified under our causal model M∗. Explain why the randomization assumption does not hold using the backdoor criterion. Hint: See Lecture 6c.
+
+*Answer*: To have identifiability, we need the randomization assumption to hold ($Y_a \perp A | W$), where W is the set of adjustment variables. Assessing the backdoor criterion for this model, we do not have any independence assumptions for the background variables U. Even though we could try to control for W, we still have a backdoor path from A -> U -> Y, since we haven't made any independence assumptions. Controlling on W only blocks one backdoor path, and Z is a collider so we don't want to control on Z.
+
+7.Under what independence assumptions on PU would we have identifiability? Are some of these assumptions more plausible than others? Are there additional data we could collect to make these assumptions more plausible?
+
+*Answer*: If we made minimum independence assumptions on the background variables U such that $U_A \perp U_Y$ and $U_A \perp U_Z$ and $U_A \perp U_W$ OR $U_Y \perp U_W$, we would then have identifiability, since we could maintain the randomization assumption because the backdoor paths between A and Y (originally through $Y - U_Y - A$ and $Y - U_Z - Z -A$ and $Y - U_A - A - Y$).
+
+It's reasonable to assume independence in the background variables affecting male circumcision and HIV status, particularly since that is our causal explanation of interest. Similarly, independence in the background factors affecting male circumcision and sexual behavior/STI is also reasonable. However, independence for the background factors affecting tribe/religion and male circumcision (A) might be harder to assume: it could be that there are other background factors that similarly influence cultural/religious ones that affect circumcision, and be difficult to parse out that relationship. For this study, it might be best to then assume that the background factors between HIV status and tribe/religion are more likely to be independent. 
+
+8. What is the minimal adjustment set, which would block all backdoor paths from Y (HIV seroconversion) to A (male circumcision) if these independence assumptions held?
+
+*Answer*: The minimal adjustment set we would need would be to control on W given these independence assumptions. W blocks between A and Y, and we don't block on Z because it would introduce spurious assocations (since it is a collider on the causal path).
+
+9. What is the relevant positivity assumption? Are you concerned about violations of the positivity assumption in your study?
+
+*Answer*: The positivity assumption here, or experimental treatment assignment, we would need the probability that each exposure of interest (male circumcision, A) to occur for each possible value of the adjustment variable (tribe/religion, W) to be greater than 0, or $P_O (A=a |W = w) >0$ for all W where $P_O (W=w)>0$. In this study, it could be that the probability of circumcision (A=1) given a certain tribe or religion could be 0, meaning that group never practices circumcision: $P(A=1|W=1) = 0$. Or the flip case could similarly have 0 probability, that certain tribes/religions always practice circumcision, such that $P(A=0|W=0) = 0$.
+
+# Step 5: Statistical Estimation Problem
+
+10. Specify the target parameter of the observed data distribution (i.e., the statistical estimand).
+
+*Answer*: Based on this info, our statistical estimand would be:
+
+$\Psi(P_O) = \sum_w E_O(Y|A=a, W=w)*P_O(W=w)$
+or,
+$\Psi(P_O) = [E_O(Y|A=1,W=1)-E_O(Y|A=0,W=1)]*P_O(W=1) + [E_O(Y|A=1,W=0)-E_O[Y|A=0,W=0)]*P_O(W=0)$
+
+11. Have we changed our causal model M∗ or our statistical model M?
+
+*Answer*: Because we know the assumptions under which our causal model M* would satisfy identifiability between the causal and the statistical model, we have not changed our causal or statistical models, we've just supplied convenient assumptions under which our target parameter $\Psi^*(P^*)$ would be identifiable to the statistical model $\Psi(P)$, which we can now describe as $\Psi(P_O)$ is equal to the g-computation or statistical estimand described above.
+
+
+
+
+
